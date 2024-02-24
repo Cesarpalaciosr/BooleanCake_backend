@@ -29,13 +29,13 @@ function ingredientRouter(
 
 	fastify.route({
 		method: "DELETE",
-		url: "//:id",
+		url: "/:id",
 		handler: deleteIngredient,
 	});
 
 	fastify.route({
 		method: "PUT",
-		url: "//:id",
+		url: "/:id",
 		handler: updateIngredient,
 	});
 

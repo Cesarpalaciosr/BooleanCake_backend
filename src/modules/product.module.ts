@@ -49,7 +49,7 @@ class ProductsModule {
 			const ProductDetails = await this.Product.findByIdAndUpdate(
 				Product_id.id,
 				{
-					storage: Product_Changes.storage,
+					stock: Product_Changes.stock,
 					name: Product_Changes.name,
 					price: Product_Changes.price,
 					expireDate: Product_Changes.expireDate,
@@ -121,6 +121,28 @@ class ProductsModule {
 		} catch (error) {
 			console.log(error);
 			return reply.code(500).send({ message: "Error Finding Product", error });
+		}
+	}
+
+	async GetInStock(request: FastifyRequest,reply:FastifyReply){
+		const regionDetail: any = request.params;
+		try {
+			const AllInStock = await this.Product.find({ region: regionDetail.region, stock: { $gte: 1 } })
+			return reply.code(202).send({message:"Products Finded", data: AllInStock})
+		} catch (error) {
+			console.log(error);
+			return reply.code(500).send({message:"no products finded",error})
+		}
+	}
+
+	async GetNoCustom(request: FastifyRequest,reply:FastifyReply){
+		const regionDetail: any = request.params;
+		try {
+			const AllInStock = await this.Product.find({ region: regionDetail.region, isPersonalized: false })
+			return reply.code(202).send({message:"Products Finded", data: AllInStock})
+		} catch (error) {
+			console.log(error);
+			return reply.code(500).send({message:"no products finded",error})
 		}
 	}
 

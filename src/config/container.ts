@@ -1,12 +1,22 @@
 import { asClass, asValue, createContainer } from "awilix";
-import Ingredient from "../models/ingredient";
-import Product from "../models/product";
-import Region from "../models/region";
-import User from "../models/user";
-import IngredientModule from "../modules/ingredient.module";
-import ProductsModule from "../modules/product.module";
-import RegionModule from "../modules/region.module";
-import UserModule from "../modules/user.module";
+import {
+	Ingredient,
+	Location,
+	Order,
+	OrderRow,
+	Product,
+	Region,
+	ShoppingCart,
+	ShoppingCartRow,
+	User,
+} from "../models";
+import {
+	IngredientModule,
+	OrderModule,
+	ProductsModule,
+	RegionModule,
+	UserModule,
+} from "../modules";
 
 const UCM = createContainer(); //User Container Module
 
@@ -14,7 +24,9 @@ const PCM = createContainer(); //Product Container Module
 
 const ICM = createContainer(); //Invoice Container Module
 
-const RCM = createContainer();
+const RCM = createContainer(); //Region Container Module
+
+const OCM = createContainer(); //Order Container Module
 
 UCM.register({
 	UserModule: asClass(UserModule).singleton(),
@@ -36,4 +48,15 @@ RCM.register({
 	RegionModel: asValue(Region),
 });
 
-export { UCM, PCM, ICM, RCM };
+OCM.register({
+	OrderModule: asClass(OrderModule).singleton(),
+	OrderModel: asValue(Order),
+	OrderRowModel: asValue(OrderRow),
+	UserModel: asValue(User),
+	ProductModel: asValue(Product),
+	ShoppingCartModel: asValue(ShoppingCart),
+	ShoppingCartRowModel: asValue(ShoppingCartRow),
+	LocationModel: asValue(Location),
+});
+
+export { UCM, PCM, ICM, RCM, OCM };

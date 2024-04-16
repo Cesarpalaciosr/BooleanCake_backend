@@ -6,6 +6,7 @@ import {
 } from "fastify";
 import {
 	createUser,
+	editUser,
 	getSchemas,
 	getUserInfo,
 	logOutUser,
@@ -44,11 +45,17 @@ function userRouter(
 			handler: logOutUser,
 		});
 
+		fastify.route({
+			method: "PUT",
+			url: "/update",
+			handler: editUser,
+		});
+
 		done();
 	});
 	fastify.route({
 		method: "POST",
-		url: "/create",
+		url: "/",
 		handler: createUser,
 		schema: {
 			body: { $ref: "CreateBody#" },

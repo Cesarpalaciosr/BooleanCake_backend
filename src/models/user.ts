@@ -49,7 +49,7 @@ const usuarioSchema = new mongoose.Schema<UserInterface>(
 		},
 		role: {
 			type: String,
-			enum: ["admin", "user"],
+			enum: ["admin", "user", "rider"],
 			default: "user",
 		},
 		token: {
@@ -59,6 +59,10 @@ const usuarioSchema = new mongoose.Schema<UserInterface>(
 		verify: {
 			type: Boolean,
 			default: false,
+		},
+		money: {
+			type: Number,
+			default: 0,
 		},
 	},
 	{

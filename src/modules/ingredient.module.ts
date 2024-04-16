@@ -1,20 +1,15 @@
-import bcrypt from "bcrypt";
 import { FastifyReply, FastifyRequest } from "fastify";
-import jwt from "jsonwebtoken";
 import { Document, Model } from "mongoose";
-import { IngredientInterface, ProductsInterface } from "../interfaces";
-import Ingredient from "../models/ingredient";
-import { generateJWT, generateToken1 } from "../utils/generateToken";
-import { emailRegistro, emailReset } from "../utils/mail";
+import { IngredientInterface } from "../interfaces";
 
 interface IngredientDocument extends Document, IngredientInterface {}
 
 class IngredientModule {
-	Ingridient: Model<IngredientDocument>;
+	Ingredient: Model<IngredientDocument>;
 	constructor({
 		IngredientModel,
 	}: { IngredientModel: Model<IngredientDocument> }) {
-		this.Ingridient = IngredientModel;
+		this.Ingredient = IngredientModel;
 		console.log("IngredientModule loaded");
 	}
 
@@ -26,7 +21,7 @@ class IngredientModule {
 			request.body as IngredientInterface;
 
 		try {
-			const newIngredient = await this.Ingridient.create({
+			const newIngredient = await this.Ingredient.create({
 				name,
 				price,
 				stock,
@@ -52,16 +47,16 @@ class IngredientModule {
 		const { name, price, stock, unitMeasure } =
 			request.body as IngredientInterface;
 		try {
-			const ExistingIngrient = await this.Ingridient.findById(id);
-			if (!ExistingIngrient) {
+			const existingIngredient = await this.Ingredient.findById(id);
+			if (!existingIngredient) {
 				return reply.code(404).send({ message: "Ingredient not found" });
 			}
-			const updatedIngredient = await this.Ingridient.findByIdAndUpdate({
-				name,
-				price,
-				stock,
-				unitMeasure,
-			});
+			const updatedIngredient = await this.Ingredient.findByIdAndUpdate(
+				id,
+				{ name, price, stock, unitMeasure },
+				{ new: true }
+			);
+			
 			return reply
 				.code(202)
 				.send({ message: "Ingredient updated", data: updatedIngredient });
@@ -78,7 +73,7 @@ class IngredientModule {
 	) {
 		const { id } = request.params as { id: string };
 		try {
-			const deletedIngredient = await this.Ingridient.findByIdAndDelete(id);
+			const deletedIngredient = await this.Ingredient.findByIdAndDelete(id);
 			if (!deletedIngredient) {
 				return reply.code(404).send({ message: "Ingredient not found" });
 			}
@@ -92,15 +87,15 @@ class IngredientModule {
 		}
 	}
 
-	async getAllIngridients(
+	async getAllIngredients(
 		request: FastifyRequest<{ Body: IngredientDocument }>,
 		reply: FastifyReply,
 	) {
 		try {
-			const ingredients = await this.Ingridient.find();
+			const ingredients = await this.Ingredient.find();
 			return reply
 				.code(200)
-				.send({ message: "ingridients founds", data: ingredients });
+				.send({ message: "ingredients found", data: ingredients });
 		} catch (error) {
 			return reply
 				.code(500)
@@ -108,13 +103,13 @@ class IngredientModule {
 		}
 	}
 
-	async getIngridientById(
+	async getIngredientById(
 		request: FastifyRequest<{ Body: IngredientDocument }>,
 		reply: FastifyReply,
 	) {
 		const { id } = request.params as { id: string };
 		try {
-			const ingredient = await this.Ingridient.findById(id);
+			const ingredient = await this.Ingredient.findById(id);
 			if (!ingredient) {
 				return reply.code(404).send({ message: "Ingredient not found" });
 			}

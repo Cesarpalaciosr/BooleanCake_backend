@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class IngredientModule {
     constructor({ IngredientModel, }) {
-        this.Ingridient = IngredientModel;
+        this.Ingredient = IngredientModel;
         console.log("IngredientModule loaded");
     }
     createIngredient(request, reply) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, price, stock, unitMeasure } = request.body;
             try {
-                const newIngredient = yield this.Ingridient.create({
+                const newIngredient = yield this.Ingredient.create({
                     name,
                     price,
                     stock,
@@ -42,16 +42,11 @@ class IngredientModule {
             const { id } = request.params;
             const { name, price, stock, unitMeasure } = request.body;
             try {
-                const ExistingIngrient = yield this.Ingridient.findById(id);
-                if (!ExistingIngrient) {
+                const existingIngredient = yield this.Ingredient.findById(id);
+                if (!existingIngredient) {
                     return reply.code(404).send({ message: "Ingredient not found" });
                 }
-                const updatedIngredient = yield this.Ingridient.findByIdAndUpdate({
-                    name,
-                    price,
-                    stock,
-                    unitMeasure,
-                });
+                const updatedIngredient = yield this.Ingredient.findByIdAndUpdate(id, { name, price, stock, unitMeasure }, { new: true });
                 return reply
                     .code(202)
                     .send({ message: "Ingredient updated", data: updatedIngredient });
@@ -67,7 +62,7 @@ class IngredientModule {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = request.params;
             try {
-                const deletedIngredient = yield this.Ingridient.findByIdAndDelete(id);
+                const deletedIngredient = yield this.Ingredient.findByIdAndDelete(id);
                 if (!deletedIngredient) {
                     return reply.code(404).send({ message: "Ingredient not found" });
                 }
@@ -82,13 +77,13 @@ class IngredientModule {
             }
         });
     }
-    getAllIngridients(request, reply) {
+    getAllIngredients(request, reply) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const ingredients = yield this.Ingridient.find();
+                const ingredients = yield this.Ingredient.find();
                 return reply
                     .code(200)
-                    .send({ message: "ingridients founds", data: ingredients });
+                    .send({ message: "ingredients found", data: ingredients });
             }
             catch (error) {
                 return reply
@@ -97,11 +92,11 @@ class IngredientModule {
             }
         });
     }
-    getIngridientById(request, reply) {
+    getIngredientById(request, reply) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = request.params;
             try {
-                const ingredient = yield this.Ingridient.findById(id);
+                const ingredient = yield this.Ingredient.findById(id);
                 if (!ingredient) {
                     return reply.code(404).send({ message: "Ingredient not found" });
                 }

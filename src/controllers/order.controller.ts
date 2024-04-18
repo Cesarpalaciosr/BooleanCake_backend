@@ -51,6 +51,17 @@ const updateOrder = async (request: FastifyRequest, reply: FastifyReply) => {
 	await orderModule.updateOrder(request, reply);
 };
 
+const assignRider = async (request: FastifyRequest, reply: FastifyReply) => {
+	await orderModule.assignRider(request, reply);
+};
+
+const createCustomOrder = async (
+	request: FastifyRequest,
+	reply: FastifyReply,
+) => {
+	await orderModule.createCustomOrder(request, reply);
+};
+
 export {
 	createOrder,
 	getAllOrders,
@@ -63,4 +74,6 @@ export {
 	removeFromCart,
 	getCart,
 	buyCart,
+	assignRider,
+	createCustomOrder,
 };
